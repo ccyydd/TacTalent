@@ -1,0 +1,12 @@
+[
+  {
+    "seed": 0,
+    "status": 400,
+    "body": "data: {\"type\": \"error\", \"error\": {\"type\": \"invalid_request_error\", \"message\": \"{\\\"error\\\": {\\\"code\\\": \\\"invalid_encrypted_content\\\", \\\"type\\\": \\\"invalid_request_error\\\", \\\"message\\\": \\\"Synthetic rejected reasoning item\\\", \\\"param\\\": null}}\"}}\n\n"
+  },
+  {
+    "seed": 1,
+    "status": 400,
+    "body": "data: {\"type\": \"error\", \"error\": {\"code\": \"invalid_encrypted_content\", \"type\": \"invalid_request_error\", \"message\": \"Synthetic rejected reasoning item\", \"param\": null}}\n\n"
+  }
+]

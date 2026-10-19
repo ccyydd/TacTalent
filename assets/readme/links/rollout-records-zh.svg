@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="68" height="20" role="img" aria-label="评测: 记录">
+  <title>评测: 记录</title>
+  <clipPath id="round"><rect width="68" height="20" rx="3"/></clipPath>
+  <g clip-path="url(#round)">
+    <path fill="#4b4f56" d="M0 0h34v20H0z"/>
+    <path fill="#55779c" d="M34 0h34v20H34z"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,DejaVu Sans,Arial,Microsoft YaHei,sans-serif" font-size="11">
+    <text x="17" y="14">评测</text>
+    <text x="51" y="14">记录</text>
+  </g>
+</svg>

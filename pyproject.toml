@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tactalent"
+version = "0.1.0"
+description = "GPT-6 Astra visual-tactile control on UniVTAC and OpenViTac with RoboICL"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+dependencies = [
+  "numpy==1.26.0", "Pillow==11.3.0", "PyYAML==6.0.2", "h5py==3.14.0",
+  "scipy==1.15.3", "opencv-python-headless==4.11.0.86", "requests>=2.32,<3",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
+[project.scripts]
+tactalent = "tactalent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["tactalent*"]
+exclude = ["tactalent._vendor*"]
+
+[tool.setuptools.package-data]
+tactalent = ["_vendor/RoboICL/**/*.py", "_vendor/RoboICL/**/*.json", "_vendor/RoboICL/LICENSE", "roboicl/templates/*.html"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.format]
+quote-style = "double"

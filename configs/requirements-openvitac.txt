@@ -1,0 +1,4 @@
+# Isolated --target install; shared NumPy/SciPy/Torch remain unchanged.
+scikit-image==0.22.0
+lazy-loader==0.4
+tifffile==2024.8.30

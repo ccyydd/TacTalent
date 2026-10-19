@@ -1,0 +1,13 @@
+{
+  "source_commit": "cf60c50",
+  "snapshot": "roboicl",
+  "publication": "source-only initial snapshot",
+  "official_roboicl_commit": "a7d652a9f8d4363aa90c0bda00004686af0589d8",
+  "algorithm_bindings_checked": 21,
+  "original_git_history_included": false,
+  "package_layout": "src/tactalent",
+  "supported_benchmarks": [
+    "UniVTAC",
+    "OpenViTac"
+  ]
+}

@@ -1,0 +1,86 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RoboICL · 全任务视频对照</title>
+<style>
+:root{color-scheme:dark;--bg:#101720;--card:#19232e;--line:#344354;--muted:#a8bacb;--green:#83deba;--red:#ffa998;--yellow:#eed486}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#e8f0f7;font:15px/1.6 system-ui,sans-serif}main{max-width:1580px;margin:auto;padding:32px 30px 70px}h1{font-size:30px;letter-spacing:-.7px;margin:0 0 9px}h2{font-size:22px;margin:0}h3{font-size:16px;margin:0}p{margin:8px 0;color:var(--muted)}a{color:#a4d0ff}button,select{font:inherit;color:inherit;background:#243445;border:1px solid #4a6077;border-radius:7px;padding:5px 10px;cursor:pointer}button:hover{background:#34495d}.pill{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:2px 9px;color:var(--muted);font-size:13px}.success{color:var(--green)}.failed{color:var(--red)}.error,.initialization_failed{color:var(--yellow)}button:disabled{opacity:.4;cursor:default}.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:18px 0}.nav{display:flex;flex-wrap:wrap;gap:6px}.nav a{padding:4px 9px;border-radius:6px;background:#21303e;font-size:13px;text-decoration:none}.explain{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:20px 0;background:#18222d}.explain p{margin:4px 0}.task{scroll-margin-top:18px;margin:30px 0;padding:20px;background:var(--card);border:1px solid var(--line);border-radius:12px}.heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:15px 0}.screen{background:#080d13;border:1px solid #344354;border-radius:8px;overflow:hidden}video{display:block;width:100%;height:auto;object-fit:contain;background:black;max-height:650px}.screen-title{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px}.screen-title select{max-width:100%;font-size:13px}.caption{padding:8px 12px;font-size:13px;color:var(--muted)}details{font-size:13px;color:var(--muted)}summary{cursor:pointer}pre{white-space:pre-wrap;word-break:break-all;background:#0d151d;padding:12px;border-radius:6px}code{color:#d8e8fa}.note{color:#e4cb9a}.meta{font-size:13px}footer{color:var(--muted);font-size:13px} [hidden]{display:none!important}@media(max-width:850px){main{padding:18px 12px}.pair{grid-template-columns:1fr}.task{padding:13px}h1{font-size:25px}}
+</style><main>
+<h1 id="title">RoboICL · 全任务视频对照</h1>
+<p id="updated"></p><p id="update-notice" hidden>页面有新结果。<button onclick="location.reload()">加载更新</button></p>
+<div class="bar" id="counts"></div>
+<div class="explain">
+<p>左侧是实际参考数据的完整来源示范；Astra 接收其中抽取的片段，并非整条视频。多示范任务可通过下拉菜单逐条查看。</p>
+<p>右侧是评测过程；API 等待时间不在视频内。两边均可独立拖动和慢放，时刻不代表对应阶段。</p>
+<p>两侧统一使用 UniVTAC 默认导出帧率 10 fps，完整保留所有记录帧。1× 表示该导出视频的正常播放速度，不代表真实仿真速度；可手动调整倍速。各视图等比例缩放、补黑边，并使用相同标签和排布。</p>
+<p>两侧都只显示该次评测实际提供给 Astra 的相机和触觉；未输入的腕相机不显示。这些调整仅用于此页面，不改变模型输入。</p>
+</div>
+<div class="bar"><label>筛选 <select id="bench"><option value="">全部 benchmark</option><option>UniVTAC</option><option>OpenViTac</option></select></label><select id="status"><option value="">全部结果</option><option value="success">成功</option><option value="failed">任务失败</option><option value="error">运行异常</option><option value="initialization_failed">初始化失败</option></select><button id="pause">暂停所有视频</button></div>
+<nav class="nav" id="nav"></nav><div id="tasks"></div>
+<footer>原始评测与示范数据保持不变。<a href="manifest.json">查看视频来源与尺寸记录</a></footer></main>
+<script id="data" type="application/json">__DATA__</script>
+<script>
+const data=JSON.parse(document.getElementById('data').textContent), statusNames={success:'成功',failed:'任务失败',error:'运行异常',initialization_failed:'初始化失败'};
+document.getElementById('title').textContent='RoboICL · '+(data.logical_task_count||data.tasks.length)+' 个任务的视频对照';
+document.getElementById('updated').textContent='固定评测入口 · 最近更新：'+new Date(data.updated_utc).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'})+'（北京时间）';
+setInterval(async()=>{try{const r=await fetch('manifest.json?t='+Date.now(),{cache:'no-store'});if(r.ok&&(await r.json()).updated_utc!==data.updated_utc)document.getElementById('update-notice').hidden=false}catch(e){}},30000);
+const cameraNames={head:'固定相机',wrist:'腕相机',tactile_left:'左触觉',tactile_right:'右触觉'};
+function el(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
+for(const k of ['success','failed','error','initialization_failed'])if(data.counts[k]!==undefined)document.getElementById('counts').append(el('span',data.counts[k]+' '+statusNames[k],'pill '+k));
+document.getElementById('counts').append(el('span',data.demo_count+' 条来源示范 · '+data.evaluation_count+' 条评测录像'+(data.unavailable_count?' · '+data.unavailable_count+' 集无有效录像':''),'pill'));
+if(data.episode_count){
+ const note=el('div',undefined,'explain');note.append(el('p','本轮共 '+data.episode_count+' 集，全部列在各任务右侧下拉菜单中。按 seed、类别和结果逐集切换，也可使用上一集 / 下一集。'));
+ note.append(el('p','有录像的运行异常保留中断前的画面；没有图像帧的记录单独说明原因，不用旧视频替代。'));
+ const batchNote=el('p');note.append(batchNote);document.getElementById('counts').after(note);
+ fetch('batch_progress.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(d=>{
+  batchNote.textContent=d.note||'';
+  const details=el('details');details.append(el('summary','查看本批次各任务统计'));
+  const wrap=el('div');wrap.style.overflowX='auto';const table=el('table');table.style.width='100%';
+  const header=el('tr');['Benchmark','任务','已记录 / 计划','成功','失败','运行异常','初始化失败','有效集成功率'].forEach(v=>header.append(el('th',v)));table.append(header);
+  for(const r of d.tasks){const tr=el('tr');[r.benchmark,r.task,r.completed+' / '+r.planned,r.success,r.failed,r.error,r.initialization_failed||0,r.valid?(100*r.success/r.valid).toFixed(1)+'%':'—'].forEach(v=>tr.append(el('td',String(v))));table.append(tr)}
+  wrap.append(table);details.append(wrap);note.append(details);
+ }).catch(()=>{});
+}
+const controls=[];
+function panel(items,title,isDemo,task){
+ const box=el('div',undefined,'screen'),head=el('div',undefined,'screen-title');head.append(el('h3',title));
+ const choose=el('select');choose.setAttribute('aria-label',task.name+(task.variant?' '+task.variant:'')+' '+title+'选择');
+ items.forEach((it,i)=>{const opt=el('option',(isDemo?'':(i+1)+' / '+items.length+' · ')+it.label+(it.available===false?' · 无录像':''));opt.value=i;choose.append(opt)});head.append(choose);box.append(head);
+ const nav=el('div',undefined,'caption'),previous=el('button','上一集'),next=el('button','下一集');if(!isDemo){nav.append(previous,document.createTextNode(' '),next);box.append(nav)}
+ const video=el('video');video.controls=true;video.preload='none';video.playsInline=true;video.setAttribute('aria-label',task.name+' '+title);box.append(video);
+ const missing=el('p',undefined,'caption note');box.append(missing);
+ const caption=el('div',undefined,'caption'),speed=el('select');speed.setAttribute('aria-label',task.name+' '+title+'播放速度');[.25,.5,1,2].forEach(v=>{const op=el('option',v===1?'1×（UniVTAC 默认）':v+'×');op.value=v;op.selected=v===1;speed.append(op)});
+ speed.onchange=()=>video.playbackRate=+speed.value;caption.append(speed,document.createTextNode(' '));const info=el('span');caption.append(info);
+ const link=el('a',' 单独打开视频');link.target='_blank';caption.append(link);box.append(caption);
+ const outcome=el('p',undefined,'caption');box.append(outcome);
+ const details=el('details');details.append(el('summary',isDemo?'来源 / 实际参考片段':'来源 / 评测结果'));const pre=el('pre');details.append(pre);box.append(details);
+ function visibleIndices(){return [...choose.options].filter(o=>!o.hidden).map(o=>+o.value)}
+ function update(){
+  video.pause();const it=items[+choose.value];if(!it)return;
+  const available=it.available!==false;video.hidden=!available;missing.hidden=available;caption.hidden=!available;
+  if(available){video.src=it.src;video.poster=it.poster;video.playbackRate=+speed.value;link.href=it.src;const m=it.video;info.textContent=m.width+'×'+m.height+' · '+Number(m.duration).toFixed(2)+'s · '+parseFloat(m.r_frame_rate)+' fps'}
+  else{video.removeAttribute('src');video.removeAttribute('poster');video.load();missing.textContent=it.unavailable_reason||'本集没有有效录像。';link.removeAttribute('href')}
+  outcome.textContent=isDemo?'':it.label+'；'+(it.steps??'—')+' 步；'+(it.decisions??'—')+' 次决策。'+(it.note||'');
+  outcome.className='caption '+(it.status||'');
+  pre.textContent=isDemo?'来源：'+it.source+'\nseed：'+it.seed+'；episode：'+it.episode_id+'\nAstra 实际参考：'+it.starts.length+' 个片段，每段 '+it.horizon+' 步\n片段起点：'+it.starts.join(', ')+'\n原始图像尺寸：'+JSON.stringify(it.source_sizes_wh):'评测目录：'+it.output+'\n录像来源：'+(it.source||'未生成')+'\n类别 / 布局：'+JSON.stringify(it.conditions||{})+'\n结果：'+statusNames[it.status]+'；步数：'+(it.steps??'—')+'\n结束原因：'+it.termination+(it.unavailable_reason?'\n'+it.unavailable_reason:'');
+  const indices=visibleIndices(),index=indices.indexOf(+choose.value);previous.disabled=index<=0;next.disabled=index<0||index===indices.length-1;
+ }
+ function move(delta){const indices=visibleIndices(),index=indices.indexOf(+choose.value);if(indices[index+delta]!==undefined){choose.value=indices[index+delta];update()}}
+ previous.onclick=()=>move(-1);next.onclick=()=>move(1);choose.onchange=update;
+ const initial=items.findIndex(it=>it.available!==false);choose.value=initial<0?0:initial;update();
+ return {box,filterStatus(s){[...choose.options].forEach((op,i)=>{op.hidden=!!(s&&items[i].status!==s)});const indices=visibleIndices();if(indices.length&&!indices.includes(+choose.value))choose.value=indices[0];update()}};
+}
+for(const t of data.tasks){
+ const title=t.name+(t.variant?' · '+t.variant:'');
+ const a=el('a',t.benchmark+' · '+title);a.href='#'+t.id;a.dataset.bench=t.benchmark;a.dataset.statuses=[...new Set(t.evaluations.map(e=>e.status))].join(' ');document.getElementById('nav').append(a);
+ const section=el('section',undefined,'task');section.id=t.id;section.dataset.bench=t.benchmark;section.dataset.statuses=a.dataset.statuses;
+ const h=el('div',undefined,'heading');h.append(el('h2',title+' · '+t.benchmark));
+ if(t.batch_counts){const c=t.batch_counts,valid=(c.success||0)+(c.failed||0);h.append(el('span','成功 '+(c.success||0)+' / '+valid+' 个有效集；'+t.available_videos+' / '+t.planned_episodes+' 集有录像','pill'))}
+ else h.append(el('span',statusNames[t.status]+' · '+t.steps+' 步 · '+t.decisions+' 次决策','pill '+t.status));
+ section.append(h);
+ section.append(el('p','Astra 实际输入：'+t.model_images.map(k=>cameraNames[k]||k).join(' / ')+'；H = '+t.horizon+'；官方动作上限 '+t.native_horizon+'。','meta'));
+ if(t.note)section.append(el('p',t.note,'note'));
+ const pair=el('div',undefined,'pair'),demo=panel(t.demos,'参考示范',true,t),evaluation=panel(t.evaluations,'Astra 评测',false,t);
+ pair.append(demo.box,evaluation.box);section.append(pair);document.getElementById('tasks').append(section);controls.push(evaluation);
+}
+function filter(){const b=document.getElementById('bench').value,s=document.getElementById('status').value;document.querySelectorAll('[data-bench]').forEach(n=>{n.hidden=!!((b&&n.dataset.bench!==b)||(s&&!n.dataset.statuses.split(' ').includes(s)));if(n.hidden)n.querySelectorAll('video').forEach(v=>v.pause())});controls.forEach(c=>c.filterStatus(s))}
+document.getElementById('bench').onchange=filter;document.getElementById('status').onchange=filter;document.getElementById('pause').onclick=()=>document.querySelectorAll('video').forEach(v=>v.pause());
+if(location.hash)setTimeout(()=>document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView(),50);
+</script></html>
