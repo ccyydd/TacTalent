@@ -4,6 +4,8 @@
   <p>杨晨<sup>1,2</sup> · 史麟哲<sup>2</sup> · 张航<sup>2</sup> · 徐牧<sup>2</sup> · 樊健生<sup>1</sup> · 王琛<sup>1,†</sup></p>
   <p><sup>1</sup>清华大学 &nbsp; <sup>2</sup>阿里巴巴集团 · 高德<br><sup>†</sup>通讯作者</p>
   <p>
+    <a href="https://arxiv.org/abs/2610.26846"><img src="assets/readme/links/arxiv.svg?v=8550b4a7f0" height="20" alt="arXiv"></a>
+    <a href="https://tactalent.github.io/TacTalent-Technical-Report.pdf?v=94df6a01e217"><img src="assets/readme/links/paper-pdf.svg?v=b7b18a21dd" height="20" alt="Paper PDF"></a>
     <a href="https://tactalent.github.io/?lang=zh"><img src="assets/readme/links/project-page-zh.svg?v=e07bcfbec0" height="20" alt="项目主页"></a>
     <a href="https://github.com/ccyydd/SimpleTouch"><img src="assets/readme/links/code-simpletouch.svg?v=21db3f4a48" height="20" alt="Code (SimpleTouch)"></a>
     <a href="https://tactalent.github.io/records.html?lang=zh"><img src="assets/readme/links/rollout-records-zh.svg?v=5d774d8a8d" height="20" alt="逐集评测记录"></a>
@@ -191,3 +193,14 @@ TacTalent 自身的适配与评测代码采用 [Apache License 2.0](LICENSE)。
 ## 🤝 Acknowledgements
 
 感谢 [RoboICL](https://github.com/Mosi-AI/RoboICL)、[UniVTAC](https://github.com/univtac/UniVTAC) 和 [OpenViTac](https://github.com/FVL-Repo/OpenViTac) 的作者与维护者。
+
+## 引用
+
+```bibtex
+@article{yang2026tactalent,
+  title={GPT-6 Astra Is a Native Visuo-Tactile Policy for Contact-Rich Manipulation},
+  author={Yang, Chen and Shi, Linzhe and Zhang, Hang and Xu, Mu and Fan, Jiansheng and Wang, Chen},
+  journal={arXiv preprint arXiv:2610.26846},
+  year={2026}
+}
+```

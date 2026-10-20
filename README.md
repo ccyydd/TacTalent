@@ -4,6 +4,8 @@
   <p>Chen Yang<sup>1,2</sup> · Linzhe Shi<sup>2</sup> · Hang Zhang<sup>2</sup> · Mu Xu<sup>2</sup> · Jiansheng Fan<sup>1</sup> · Chen Wang<sup>1,†</sup></p>
   <p><sup>1</sup>Tsinghua University &nbsp; <sup>2</sup>Amap, Alibaba Group<br><sup>†</sup>Corresponding author</p>
   <p>
+    <a href="https://arxiv.org/abs/2610.26846"><img src="assets/readme/links/arxiv.svg?v=8550b4a7f0" height="20" alt="arXiv"></a>
+    <a href="https://tactalent.github.io/TacTalent-Technical-Report.pdf?v=94df6a01e217"><img src="assets/readme/links/paper-pdf.svg?v=b7b18a21dd" height="20" alt="Paper PDF"></a>
     <a href="https://tactalent.github.io/?lang=en"><img src="assets/readme/links/project-page-en.svg?v=a3d66d4c0a" height="20" alt="Project Page"></a>
     <a href="https://github.com/ccyydd/SimpleTouch"><img src="assets/readme/links/code-simpletouch.svg?v=21db3f4a48" height="20" alt="Code (SimpleTouch)"></a>
     <a href="https://tactalent.github.io/records.html?lang=en"><img src="assets/readme/links/rollout-records-en.svg?v=63cda6f89a" height="20" alt="Rollout Records"></a>
@@ -191,3 +193,14 @@ TacTalent’s original adapter and evaluation code is licensed under the [Apache
 ## 🤝 Acknowledgements
 
 We thank the authors and maintainers of [RoboICL](https://github.com/Mosi-AI/RoboICL), [UniVTAC](https://github.com/univtac/UniVTAC) and [OpenViTac](https://github.com/FVL-Repo/OpenViTac).
+
+## Citation
+
+```bibtex
+@article{yang2026tactalent,
+  title={GPT-6 Astra Is a Native Visuo-Tactile Policy for Contact-Rich Manipulation},
+  author={Yang, Chen and Shi, Linzhe and Zhang, Hang and Xu, Mu and Fan, Jiansheng and Wang, Chen},
+  journal={arXiv preprint arXiv:2610.26846},
+  year={2026}
+}
+```
